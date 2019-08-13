@@ -1,0 +1,37 @@
+<aura:component controller="CalloutsClass"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                access="global">
+	<aura:attribute name="AccountId" type="String" />
+    <aura:attribute name="jsonArray" type="Object"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <table class="slds-table slds-table--bordered">
+        <thead>
+            <tr>
+                <th scope="col"><span class="slds-truncate">Agent</span></th>
+                <th scope="col"><span class="slds-truncate">Balance</span></th>
+                <th scope="col"><span class="slds-truncate">Date</span></th>
+                <th scope="col"><span class="slds-truncate">Description</span></th>
+                <th scope="col"><span class="slds-truncate">Money In</span></th>
+                <th scope="col"><span class="slds-truncate">Money Out</span></th>
+                <th scope="col"><span class="slds-truncate">Reference</span></th>
+                <th scope="col"><span class="slds-truncate">Type</span></th>
+            </tr>
+        </thead>        
+        <tbody>
+            <aura:iteration items="{!v.jsonArray}" var="row">
+                <tr>
+                    <td> {!row.agent}</td>
+                    <td> {!row.balance}</td>
+                    <td> {!row.date}</td>
+                    <td> {!row.description}</td>
+                    <td> {!row.money_in}</td>
+                    <td> {!row.money_out}</td>
+                    <td> {!row.reference}</td>
+                    <td> {!row.type}</td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>     
+</aura:component>

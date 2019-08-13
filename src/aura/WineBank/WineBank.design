@@ -1,0 +1,3 @@
+<design:component>
+	<design:attribute name="AccountId" label="Account Id" description="The Account Id" />
+</design:component>
