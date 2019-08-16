@@ -1,0 +1,49 @@
+/**
+ * Created by ronanwilliams on 2019-08-16.
+ */
+
+
+
+.THIS .lineRow {
+
+    display: grid;
+    grid-template-columns: 45% 45% 10%;
+    width: 100%;
+    cursor: pointer;
+    padding: 5px;
+    border-bottom: 0.5px solid #d7d7d7;
+}
+
+.THIS .lineRow:hover {
+    background-color: #f8f8f8;
+}
+
+.THIS .buttons {
+    width: 95%;
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+}
+
+.THIS .deleteIcon {
+    opacity: 0.5;
+}
+
+.THIS .deleteIcon:hover {
+    opacity: 1;
+}
+
+.THIS .name input {
+    border: none;
+}
+
+.THIS label {
+    display: none;
+}
+
+.THIS .undo {
+    /*position: absolute;*/
+    /*right: -30px;*/
+    /*top: 0;*/
+    /*z-index: 1000;*/
+}

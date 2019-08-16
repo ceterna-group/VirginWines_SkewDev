@@ -129,6 +129,10 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="SkewTemplateController" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="SkewTriggerHandler" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -324,6 +328,10 @@
                     <MetadataType>
                       <option name="entries">
                         <list>
+                          <MetadataEntry>
+                            <option name="name" value="SkewTemplateBuilder" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="WineBank" />
                             <option name="selected" value="true" />

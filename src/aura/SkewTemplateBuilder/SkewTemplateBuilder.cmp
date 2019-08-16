@@ -1,0 +1,106 @@
+<!--
+ - Created by ronanwilliams on 2019-08-16.
+ -->
+
+<aura:component controller="SkewTemplateController" implements="flexipage:availableForAllPageTypes,force:hasRecordId"
+                description="SkewTemplateBuilder">
+
+    <aura:attribute name="lines" type="Object[]"/>
+    <aura:attribute name="totalPercent" type="Integer"/>
+    <aura:attribute name="skewTemplate" type="Skew_Template__c"/>
+    <aura:attribute name="invalidId" type="String" default="none"/>
+    <aura:attribute name="responsePending" type="Boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <force:recordData aura:id="recordLoader"
+                      recordId="{!v.recordId}"
+                      fields="Name"
+                      targetFields="{!v.skewTemplate}"/>
+
+    <lightning:card >
+
+
+
+
+        <div style="padding: 10px;">
+
+            <div class="buttons">
+                <lightning:button label="CLONE"/>
+                <lightning:button label="DELETE"/>
+
+            </div>
+
+
+            <div class="lineRow" style="font-size: 18px;font-weight: bold;margin-bottom: 25px;border-bottom: 0.5px solid white">
+
+                <div style="padding-right:20px;padding-left: 20px;" class="name">
+                    <lightning:input value="{!v.skewTemplate.Name}" required="true" label="Name" />
+                </div>
+                <div style="{!v.totalPercent > 100 ? 'color:red' : ''}">
+                    <span>{!v.totalPercent + '%'}</span>
+                    <aura:if isTrue="{!v.totalPercent > 100}">
+                        <span style="margin-left: 5px;">
+                            <lightning:icon iconName="utility:warning" variant="error" size="small"/>
+                        </span>
+                    </aura:if>
+
+                </div>
+            </div>
+
+
+            <div class="lineRow" style="font-weight: bold;">
+                <div style="padding-left: 20px">WEEK NUMBER</div>
+                <div >PERCENT %</div>
+
+            </div>
+
+            <aura:iteration var="line" items="{!v.lines}" indexVar="index">
+
+                <div class="lineRow">
+                    <div style="padding-left: 20px">{!line.Week_Number__c}</div>
+                    <div style="width: 70px;position: relative;" >
+                        <span style="{!v.invalidId == line.Id ? 'color:red' : ''}" >
+<!--                        <span >-->
+                            <lightning:input required="true" value="{!line.Predicted__c}" max="100" min="0"
+                                             disabled="{!and(not(v.invalidId == line.Id),v.responsePending)}" messageWhenValueMissing=" "
+                                             onchange="{!c.updatePercent}" name="{!line.Id}"/>
+                        </span>
+
+                    </div>
+
+                    <aura:if isTrue="{!line.Id == v.invalidId}">
+                        <div class="undo" onclick="{!c.undoChange}" data-id="{!line.Id}">
+                            <lightning:icon iconName="utility:undo" size="small"  />
+                        </div>
+                        <aura:set attribute="else">
+                            <div class="deleteIcon" onclick="{!c.deleteRow}" data-id="{!line.Id}" data-index="{!index}">
+                                <lightning:icon iconName="utility:delete" size="small"/>
+                            </div>
+
+                        </aura:set>
+                    </aura:if>
+
+<!--                    <div class="deleteIcon" onclick="{!c.deleteRow}" data-id="{!line.Id}" data-index="{!index}">-->
+<!--                        <lightning:icon iconName="utility:delete" size="small"/>-->
+<!--                    </div>-->
+
+
+                </div>
+
+            </aura:iteration>
+
+<!--            <aura:if isTrue="{!v.invalidId != 'none'}">-->
+                <div class="lineRow" onclick="{!c.addRow}">
+                    <div style="padding-left: 15px;opacity: 0.5;"><lightning:icon iconName="action:new" size="x-small"/> </div>
+                    <div style="width: 70px">
+                        <lightning:input disabled="true" max="100" min="0"/>
+                    </div>
+                </div>
+<!--            </aura:if>-->
+
+        </div>
+    </lightning:card>
+
+
+</aura:component>
