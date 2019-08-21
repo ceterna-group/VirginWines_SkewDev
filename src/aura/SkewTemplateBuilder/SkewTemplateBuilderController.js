@@ -89,7 +89,6 @@
         });
         $A.enqueueAction(deleteLineAction);
 
-
     },
     updatePercent : function($C,$E,$H){
 
@@ -107,8 +106,6 @@
         });
 
         $C.set('v.totalPercent',totalPercent);
-
-
 
         if (!percent || totalPercent > 100 || isNaN(percent)){
             $C.set('v.invalidId',lineId);
@@ -161,7 +158,6 @@
         }
         console.log($E.getSource().get('v.name'));
 
-
     },
     undoChange : function ($C,$E,$H) {
 
@@ -186,9 +182,6 @@
         $C.set('v.lines',lines);
         $C.set('v.totalPercent',totalPercent);
 
-
-
     }
-
 
 });

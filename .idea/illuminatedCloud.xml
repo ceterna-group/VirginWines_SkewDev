@@ -4,10 +4,10 @@
     <option name="connections">
       <list>
         <IlluminatedCloudConnection>
-          <option name="connectionName" value="VirginWines SkewDev1" />
+          <option name="connectionName" value="Virgin Wines Skew Dev" />
           <option name="connectionType" value="MDAPI" />
           <option name="defaultModuleName" value="VirginWines SkewDev" />
-          <option name="offlineSymbolTablePath" value="$PROJECT_DIR$/IlluminatedCloud/VirginWines_SkewDev1/OfflineSymbolTable.zip" />
+          <option name="offlineSymbolTablePath" value="$PROJECT_DIR$/IlluminatedCloud/Virgin_Wines_Skew_Dev/OfflineSymbolTable.zip" />
         </IlluminatedCloudConnection>
       </list>
     </option>
