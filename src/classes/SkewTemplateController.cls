@@ -54,4 +54,63 @@ public class SkewTemplateController {
         update new Skew_Template_Line_Item__c(Id = Id, Predicted__c = percent);
         return true;
     }
+/*
+*  @method - updateTemplateName()
+*  @desc - Used to update the template name if of the Skew
+*  @param - String Id, String tempName - used to get the id Skew Template and to get the exact name of the current skew template
+*  @return - returns true and updates the existing templates name
+*/
+    @AuraEnabled
+    public static Boolean updateTemplateName(String Id, String tempName){
+        update new Skew_Template__c(Id = Id, Name = tempName);
+        return true;
+    }
+/*
+*  @method - deleteSkewTemplate()
+*  @desc - Used to delete an existing skew template when 'delete' is clicked
+*  @param - Skew_Template_c skewTemplate - to get the existing template that you're on
+*  @return - returns true, deletes the skew template and updates the list of existing templates
+*/
+    @AuraEnabled
+    public static Boolean deleteSkewTemplate(Skew_Template__c skewTemplate){
+        delete skewTemplate;
+        return true;
+    }
+/*
+*  @method - insertSkewTemplate()
+*  @desc - Used to insert and clone an existing skew template as a new one
+*  @param - String recordId - used to get the id of an existing skew template, which is used to get the existing line items and clone them to a new one
+*  @return - returns the Id of newly cloned skew template
+*/
+    @AuraEnabled
+    public static Id insertSkewTemplate(String recordId){
+        Skew_Template__c sourceTemplate = [SELECT Id, Name,
+                                            (SELECT Id, Week_Number__c, Predicted__c
+                                            FROM Skew_Template_Line_Items__r
+                                            ORDER BY Week_Number__c ASC)
+                                            FROM Skew_Template__c
+                                            WHERE Id = : recordId];
+
+        Skew_Template__c cloneSkewTemplate = new Skew_Template__c();
+        cloneSkewTemplate.Name = 'Copy of ' + sourceTemplate.Name;
+        insert cloneSkewTemplate;
+
+        List<Skew_Template_Line_Item__c> cloneLines = new List<Skew_Template_Line_Item__c>();
+
+        for (Skew_Template_Line_Item__c sourceLine : sourceTemplate.Skew_Template_Line_Items__r){
+            cloneLines.add(
+                    new Skew_Template_Line_Item__c(
+                            Week_Number__c = sourceLine.Week_Number__c,
+                            Predicted__c = sourceLine.Predicted__c,
+                            Skew_Template__c = cloneSkewTemplate.Id
+                    )
+
+            );
+
+        }
+
+        insert cloneLines;
+
+        return cloneSkewTemplate.Id;
+    }
 }

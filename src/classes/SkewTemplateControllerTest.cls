@@ -109,4 +109,56 @@ public with sharing class SkewTemplateControllerTest {
         //compares 64 against the the line item with the corresponding id
         System.assertEquals(64, [SELECT Predicted__c FROM Skew_Template_Line_Item__c WHERE Id = : lineItem.Id].Predicted__c);
     }
+
+    @IsTest
+    public static void testUpdateTemplateName(){
+
+        Skew_Template__c skewTemplate = new Skew_Template__c(
+                Name = 'Test Template'
+        );
+
+        insert skewTemplate;
+
+        skewTemplate.Name = 'test';
+
+        update skewTemplate;
+
+        SkewTemplateController.updateTemplateName(skewTemplate.Id, skewTemplate.Name);
+        System.assertEquals('test', [SELECT Name FROM Skew_Template__c WHERE Name = 'test'].Name);
+    }
+
+    @IsTest
+    public static void testDeleteSkewTemplate(){
+
+        Skew_Template__c skewTemplate = new Skew_Template__c(
+                Name = 'Test Template'
+        );
+
+        insert skewTemplate;
+        SkewTemplateController.deleteSkewTemplate(skewTemplate);
+        System.assertEquals(1, [SELECT Name FROM Skew_Template__c WHERE Name = 'Test Template'].size());
+    }
+
+    @IsTest
+    public static void testInsertCloneSkewTemplate(){
+
+        Skew_Template__c skewTemplate = new Skew_Template__c(
+                Name = 'Clone Template'
+        );
+
+        insert skewTemplate;
+
+        //new line item
+        Skew_Template_Line_Item__c skewLineItem = new Skew_Template_Line_Item__c();
+        skewLineItem.Skew_Template__c = skewTemplate.Id;
+        skewLineItem.Week_Number__c = 1;
+        skewLineItem.Predicted__c = 35;
+
+        insert skewLineItem;
+
+        SkewTemplateController.insertSkewTemplate(skewTemplate.Id);
+
+
+        System.assertEquals('Copy of Clone Template', [SELECT Name FROM Skew_Template__c WHERE Name = 'Copy of Clone Template'].Name);
+    }
 }

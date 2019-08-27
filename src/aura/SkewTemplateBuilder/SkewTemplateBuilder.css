@@ -33,9 +33,9 @@
     opacity: 1;
 }
 
-.THIS .name input {
-    border: none;
-}
+/*.THIS .name input {*/
+/*    border: none;*/
+/*}*/
 
 .THIS label {
     display: none;

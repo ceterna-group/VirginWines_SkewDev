@@ -15,25 +15,24 @@
 
     <force:recordData aura:id="recordLoader"
                       recordId="{!v.recordId}"
-                      fields="Name"
-                      targetFields="{!v.skewTemplate}"/>
+                      fields="Id,Name"
+                      targetFields="{!v.skewTemplate}"
+                      mode="EDIT"/>
 
     <lightning:card>
 
         <div style="padding: 10px;">
 
             <div class="buttons">
-                <lightning:button label="CLONE"/>
-                <lightning:button label="DELETE"/>
-
+                <lightning:button onclick="{!c.insertSkewTemp}" label="CLONE"/>
+                <lightning:button onclick="{!c.deleteSkewTemp}" label="DELETE"/>
             </div>
-
 
             <div class="lineRow" style="font-size: 18px;font-weight: bold;margin-bottom: 25px;border-bottom: 0.5px solid white">
 
-                <div style="padding-right:20px;padding-left: 20px;" class="name">
-                    <lightning:input value="{!v.skewTemplate.Name}" required="true" label="Name" />
-                </div>
+                <span><div style="padding-right:20px;padding-left: 20px;" class="name">
+                    <lightning:input value="{!v.skewTemplate.Name}" onchange="{!c.updateName}" required="true"  />
+                </div></span>
                 <div style="{!v.totalPercent > 100 ? 'color:red' : ''}">
                     <span>{!v.totalPercent + '%'}</span>
                     <aura:if isTrue="{!v.totalPercent > 100}">
@@ -97,6 +96,5 @@
 
         </div>
     </lightning:card>
-
 
 </aura:component>

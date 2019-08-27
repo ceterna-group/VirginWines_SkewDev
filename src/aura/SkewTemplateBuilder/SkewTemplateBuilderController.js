@@ -182,6 +182,77 @@
         $C.set('v.lines',lines);
         $C.set('v.totalPercent',totalPercent);
 
+    },
+    updateName: function($C,$E,$H){
+
+        var name = $C.get('v.skewTemplate.Name');
+
+        if (name){
+            var updateTemplateName1 = $C.get('c.updateTemplateName');
+            updateTemplateName1.setParams({ Id : $C.get("v.recordId"), tempName : name});
+            updateTemplateName1.setCallback(this, function (response) {
+                console.log(response.getState());
+
+                if (response.getState() === 'SUCCESS') {
+                    console.log(response.getReturnValue());
+                    $A.get('e.force:refreshView').fire();
+
+                }
+            });
+            $A.enqueueAction(updateTemplateName1);
+
+        }
+
+    },
+    deleteSkewTemp: function($C,$E,$H){
+
+        var skewTemp = $C.get('v.skewTemplate');
+
+        console.log(skewTemp);
+
+        var deleteSkew = $C.get('c.deleteSkewTemplate');
+
+        deleteSkew.setParams({ skewTemplate : skewTemp});
+
+        deleteSkew.setCallback(this, function (response) {
+            if (response.getState() === 'SUCCESS') {
+                var navEvent = $A.get("e.force:navigateToList");
+                navEvent.setParams({
+                    "listViewId": '00B4E000002a7KuUAI',
+                    "scope": "Skew_Template__c"
+                });
+                navEvent.fire();
+            }
+        });
+        $A.enqueueAction(deleteSkew);
+    },
+    insertSkewTemp: function($C,$E,$H){
+
+        var skewTemp = $C.get('v.recordId');
+console.log(skewTemp);
+        var insertSkew = $C.get('c.insertSkewTemplate');
+console.log(insertSkew);
+        insertSkew.setParams({ recordId : skewTemp });
+
+        insertSkew.setCallback(this, function (response) {
+
+            console.log(response.getState());
+            console.log(response.getReturnValue());
+
+            if (response.getState() === 'SUCCESS') {
+                var newSkew = response.getReturnValue();
+                console.log(newSkew);
+                var navEvt = $A.get("e.force:navigateToSObject");
+                navEvt.setParams({
+                    "recordId" : newSkew
+                });
+                console.log(newSkew);
+
+                navEvt.fire();
+                }
+
+        });
+        $A.enqueueAction(insertSkew);
     }
 
 });
