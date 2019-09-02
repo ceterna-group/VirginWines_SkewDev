@@ -1,8 +1,8 @@
 /*
-*  @class - SkewTemplateController()
-*  @desc - Used to retrieve line items from the skew template
+*  @class - SkewController()
+*  @desc - Used to retrieve line items from the skew
 */
-public class SkewTemplateController {
+public class SkewController {
 
     /*
     *  @method - getLineItems()
@@ -11,11 +11,11 @@ public class SkewTemplateController {
     *  @return - returns a db query to get Id, weekNumber, percentage from skew template based on the recordId
     */
     @AuraEnabled
-    public static List<Skew_Template_Line_Item__c> getLineItems(String recordId){
+    public static List<Skew_Line_Item__c> getLineItems(String recordId){
 
-        return [SELECT Id, Week_Number__c, Predicted__c
-                FROM Skew_Template_Line_Item__c
-                WHERE Skew_Template__c = :recordId
+        return [SELECT Id, Week_Number__c, Predicted__c, Actual_Value__c, Week_Start_Date__c
+                FROM Skew_Line_Item__c
+                WHERE Skew__c = :recordId
                 ORDER BY Week_Number__c ASC];
     }
 
@@ -93,11 +93,11 @@ public class SkewTemplateController {
     @AuraEnabled
     public static Id insertSkewTemplate(String recordId){
         Skew_Template__c sourceTemplate = [SELECT Id, Name,
-                                            (SELECT Id, Week_Number__c, Predicted__c
-                                            FROM Skew_Template_Line_Items__r
-                                            ORDER BY Week_Number__c ASC)
-                                            FROM Skew_Template__c
-                                            WHERE Id = : recordId];
+        (SELECT Id, Week_Number__c, Predicted__c
+        FROM Skew_Template_Line_Items__r
+        ORDER BY Week_Number__c ASC)
+        FROM Skew_Template__c
+        WHERE Id = : recordId];
 
         Skew_Template__c cloneSkewTemplate = new Skew_Template__c();
         cloneSkewTemplate.Name = 'Copy of ' + sourceTemplate.Name;
@@ -107,11 +107,11 @@ public class SkewTemplateController {
 
         for (Skew_Template_Line_Item__c sourceLine : sourceTemplate.Skew_Template_Line_Items__r){
             cloneLines.add(
-                new Skew_Template_Line_Item__c(
-                    Week_Number__c      = sourceLine.Week_Number__c,
-                    Predicted__c        = sourceLine.Predicted__c,
-                    Skew_Template__c    = cloneSkewTemplate.Id
-                )
+                    new Skew_Template_Line_Item__c(
+                            Week_Number__c      = sourceLine.Week_Number__c,
+                            Predicted__c        = sourceLine.Predicted__c,
+                            Skew_Template__c    = cloneSkewTemplate.Id
+                    )
             );
         }
 

@@ -2,8 +2,8 @@
  - Created by ronanwilliams on 2019-08-16.
  -->
 
-<aura:component controller="SkewTemplateController" implements="flexipage:availableForAllPageTypes,force:hasRecordId"
-                description="SkewTemplateBuilder">
+<aura:component controller="SkewController" implements="flexipage:availableForAllPageTypes,force:hasRecordId"
+                description="SkewBuilder">
 
     <aura:attribute name="lines" type="Object[]"/>
     <aura:attribute name="totalPercent" type="Integer"/>
