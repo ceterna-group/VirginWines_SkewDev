@@ -14,7 +14,7 @@
 
 .THIS .lineRow {
     display: grid;
-    grid-template-columns: 45% 45% 10%;
+    grid-template-columns: 22% 22% 22% 22% 10%;
     width: 100%;
     cursor: pointer;
     padding: 5px;

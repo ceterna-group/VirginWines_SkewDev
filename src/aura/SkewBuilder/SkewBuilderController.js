@@ -18,14 +18,17 @@
                 $C.set('v.lines',lines);
 
                 var totalPercent = 0;
+                var totalActual = 0;
                 lines.forEach(function(line){
-                    totalPercent += line.Predicted__c;
-                    line.Revert = line.Predicted__c;
-                    line.Class = '';
+                    totalPercent    += line.Predicted__c;
+                    totalActual     += line.Actual_Value__c;
+                    line.Revert     = line.Predicted__c;
+                    line.Class      = '';
                     line.ValueClass = '';
                 });
 
                 $C.set('v.totalPercent',totalPercent);
+                $C.set('v.totalActual',totalActual);
             }
         });
         $A.enqueueAction(lineItemGet);
@@ -36,14 +39,18 @@
         var newLine = {
             Week_Number__c : lines.length + 1,
             Predicted__c : 0,
-            Skew_Template__c : $C.get('v.recordId')
+            Actual_Value__c : 0,
+            Skew__c : $C.get('v.recordId')
         };
 
         lines.push(newLine);
         $C.set('v.lines',lines);
 
         var insertLine = $C.get('c.insertNewLineItem');
-        insertLine.setParams({ lineItem : newLine});
+        insertLine.setParams({
+            recordId : $C.get('v.recordId'),
+            lineItem : newLine
+        });
         insertLine.setCallback(this, function (response) {
             if (response.getState() === 'SUCCESS'){
                 var line = response.getReturnValue();
@@ -71,22 +78,27 @@
         lines.splice(deleteIndex,1);
 
         var totalPercent = 0;
+        var totalActual = 0;
 
         for (var x = 0; x < lines.length; x++){
-            lines[x].Week_Number__c = x +1;
+            if (lines[x].Week_Number__c !== x + 1){
+                lines[x].Week_Number__c = x +1;
+            }
             totalPercent += parseInt(lines[x].Predicted__c);
+            totalActual += parseInt(lines[x].Actual_Value__c);
         }
         $C.set('v.lines',lines);
         $C.set('v.totalPercent',totalPercent);
+        $C.set('v.totalActual',totalActual);
 
         var deleteLineAction = $C.get('c.deleteLineItem');
-        deleteLineAction.setParams({ lineItem : deleteLine, lineItems : lines });
+        deleteLineAction.setParams({ lineItem : deleteLine, lineItems : lines, deleteIndex : deleteIndex });
         deleteLineAction.setCallback(this, function (response) {
             $C.set('v.responsePending',false);
 
             console.log(response.getReturnValue());
             if (response.getState() === 'SUCCESS'){
-                // $C.set('v.lines',lines);
+                $C.set('v.lines',response.getReturnValue());
             }
         });
         $A.enqueueAction(deleteLineAction);
@@ -161,67 +173,5 @@
         $C.set('v.lines',lines);
         $C.set('v.totalPercent',totalPercent);
 
-    },
-    updateName: function($C,$E,$H){
-
-        var template = $C.get('v.skewTemplate');
-
-        if (template.Name){
-            var updateTemplateName1 = $C.get('c.updateTemplateName');
-            updateTemplateName1.setParams({ Id : $C.get("v.recordId"), tempName : template.Name});
-            updateTemplateName1.setCallback(this, function (response) {
-                console.log(response.getState());
-
-                if (response.getState() === 'SUCCESS') {
-                    $A.get('e.force:refreshView').fire();
-                    $C.set('v.nameClass','successInput');
-
-                    window.setTimeout(
-                        $A.getCallback(function() {
-                            $C.set('v.nameClass','');
-                        }), 800
-                    );
-                }
-            });
-            $A.enqueueAction(updateTemplateName1);
-
-        }
-
-    },
-    deleteSkewTemp: function($C,$E,$H){
-
-        var skewTemp    = $C.get('v.skewTemplate');
-        var deleteSkew  = $C.get('c.deleteSkewTemplate');
-
-        deleteSkew.setParams({ skewTemplate : skewTemp});
-
-        deleteSkew.setCallback(this, function (response) {
-            if (response.getState() === 'SUCCESS') {
-                var navEvent = $A.get("e.force:navigateToList");
-                navEvent.setParams({
-                    "listViewId": '00B4E000002a7KuUAI',
-                    "scope": "Skew_Template__c"
-                });
-                navEvent.fire();
-            }
-        });
-        $A.enqueueAction(deleteSkew);
-    },
-    insertSkewTemp: function($C,$E,$H){
-
-        var skewTemp = $C.get('v.recordId');
-        var insertSkew = $C.get('c.insertSkewTemplate');
-        insertSkew.setParams({ recordId : skewTemp });
-
-        insertSkew.setCallback(this, function (response) {
-
-            if (response.getState() === 'SUCCESS') {
-                var newSkew = response.getReturnValue();
-                var navEvt = $A.get("e.force:navigateToSObject");
-                navEvt.setParams({"recordId" : newSkew});
-                navEvt.fire();
-            }
-        });
-        $A.enqueueAction(insertSkew);
     }
 });
